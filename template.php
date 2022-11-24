@@ -2,8 +2,7 @@
 // Require DB settings with connection variable
 require_once "./includes/database.php";
 
-//Get lessons from the database with an SQL query
-$lessons = getLessons($db);
+// Add code here!
 
 //Close connection
 mysqli_close($db);
@@ -26,13 +25,7 @@ mysqli_close($db);
             <?php require_once "./includes/navigation-bar.php"; ?>
         </div>
         <div class="row">
-            <ul>
-                <?php foreach ($lessons as $lesson) { ?>
 
-                    <li><?= $lesson['start_datetime'] ?> - <?= $lesson['end_datetime'] ?> <a href="./details.php?id=<?= $lesson['id'] ?>">details</a></li>
-
-                <?php } ?>
-            </ul>
         </div>
     </div>
 </body>

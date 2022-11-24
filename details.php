@@ -2,8 +2,26 @@
 // Require DB settings with connection variable
 require_once "./includes/database.php";
 
-//Get lessons from the database with an SQL query
-$lessons = getLessons($db);
+// Check if id is set
+if (!isset($_GET['id']) || $_GET['id'] === '')
+{
+    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/Salsa-Rica-Dance-Company/schedule/');
+    exit;
+}
+
+// Get id of lesson
+$lessonId = mysqli_escape_string($db, $_GET['id']);
+
+// Get lesson from database table
+$result = getLesson($db, $lessonId);
+
+if (mysqli_num_rows($result) != 1)
+{
+    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/Salsa-Rica-Dance-Company/schedule/');
+    exit;
+}
+
+$lesson = mysqli_fetch_assoc($result);
 
 //Close connection
 mysqli_close($db);
@@ -26,12 +44,12 @@ mysqli_close($db);
             <?php require_once "./includes/navigation-bar.php"; ?>
         </div>
         <div class="row">
-            <ul>
-                <?php foreach ($lessons as $lesson) { ?>
-
-                    <li><?= $lesson['start_datetime'] ?> - <?= $lesson['end_datetime'] ?> <a href="./details.php?id=<?= $lesson['id'] ?>">details</a></li>
-
-                <?php } ?>
+            <a href="./">Terug</a>
+        </div>
+        <div class="row">
+            <h2><?= date('l jS F Y \o\n H:i', strtotime($lesson['start_datetime'])) . ' - ' . date('H:i', strtotime($lesson['end_datetime'])); ?></h2>
+            <ul class="list-group">
+                <li class="list-group-item"><b>Datum en tijd:</b> <?= date('l jS F Y \o\n H:i', strtotime($lesson['start_datetime'])) . ' - ' . date('H:i', strtotime($lesson['end_datetime'])) ?></li>
             </ul>
         </div>
     </div>

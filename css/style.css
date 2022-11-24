@@ -1,0 +1,30 @@
+.bg-maroon {
+    background-color: #800000 !important;
+}
+
+.border-maroon {
+    border-color: #800000 !important;
+}
+
+.btn-maroon {
+    background-color: #800000 !important;
+    color: white !important;
+}
+
+.btn-maroon:hover {
+    background-color: #700000 !important;
+}
+
+.btn-outline-maroon {
+    color: #800000 !important;
+    border: #800000 !important;
+}
+
+.btn-outline-maroon:hover {
+    color: #700000 !important;
+    border: #700000 !important;
+}
+
+.text-maroon {
+    color: #800000 !important;
+}
