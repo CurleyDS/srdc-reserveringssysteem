@@ -9,7 +9,7 @@ $password   = "mysql";
 $base_url = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
 $base_url .= $_SERVER["SERVER_NAME"];
 $uri_dir = dirname($_SERVER["PHP_SELF"]);
-if ($uri_dir == "\\") 
+if ($uri_dir != "\\") 
 {
     $base_url .= $uri_dir;
 }
