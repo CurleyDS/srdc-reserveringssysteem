@@ -5,6 +5,15 @@ $database   = "srdc_database";
 $user       = "root";
 $password   = "mysql";
 
+// Get base_url
+$base_url = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+$base_url .= $_SERVER["SERVER_NAME"];
+$uri_dir = dirname($_SERVER["PHP_SELF"]);
+if ($uri_dir == "\\") 
+{
+    $base_url .= $uri_dir;
+}
+
 // Start session
 // session_start();
 

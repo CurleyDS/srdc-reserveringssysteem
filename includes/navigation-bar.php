@@ -1,7 +1,3 @@
-<?php
-$base_url = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
-$base_url .= $_SERVER["SERVER_NAME"] . dirname($_SERVER["PHP_SELF"]);
-?>
 <!-- navigation-bar -->
 <ul class="col-md-12 nav p-0 d-flex justify-content-around align-items-center">
     <li class="nav-brand">
