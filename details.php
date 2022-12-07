@@ -5,7 +5,7 @@ require_once "./includes/database.php";
 // Check if id is set
 if (!isset($_GET['id']) || $_GET['id'] === '')
 {
-    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/Salsa-Rica-Dance-Company/schedule/');
+    header('Location:' . $base_url . '/');
     exit;
 }
 
@@ -17,7 +17,7 @@ $result = getLesson($db, $lessonId);
 
 if (mysqli_num_rows($result) != 1)
 {
-    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/Salsa-Rica-Dance-Company/schedule/');
+    header('Location: ' . $base_url . '/');
     exit;
 }
 
