@@ -1,6 +1,6 @@
 <?php
 if (isset($_SESSION['user'])) {
-    $nav_url = $base_url . "/../../";
+    $nav_url = $base_url . "/../";
 } else {
     $nav_url = $base_url;
 }

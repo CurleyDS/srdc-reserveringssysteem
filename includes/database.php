@@ -23,6 +23,10 @@ function formatToTime($datetime) {
     return date("H:i", strtotime($datetime));
 }
 
+function formatStrToTime($str) {
+    return date("H:i", mktime($str, 0, 0, 0, 0, 0));
+}
+
 // Start session
 session_start();
 
@@ -91,7 +95,7 @@ $db = mysqli_connect($host, $user, $password, $database)
      */
     function getAllLessons(mysqli $db) {
         // Prepare query and execute
-        $query = "SELECT * FROM `lessons` WHERE start_datetime >= CURDATE()";
+        $query = "SELECT * FROM `lessons`";
         $result = mysqli_query($db, $query) or die ('Error: ' . $query );
         
         $lessons = [];
