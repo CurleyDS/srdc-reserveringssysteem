@@ -1,6 +1,12 @@
 <?php
-// Require DB settings with connection variable
-require_once "./includes/database.php";
+//Require DB settings with connection variable
+require_once "includes/database.php";
+
+// If user is logged in, redirect to index.php
+if(isset($_SESSION['user'])){
+    header('Location:' . $base_url . '/auth/user');
+    exit;
+}
 
 // Check if id is set
 if (!isset($_GET['id']) || $_GET['id'] === '')
@@ -44,13 +50,19 @@ mysqli_close($db);
             <?php require_once "./includes/navigation-bar.php"; ?>
         </div>
         <div class="row">
-            <a href="./">Terug</a>
+            <div class="col p-2">
+                <a class="btn btn-maroon" href="./">Terug</a>
+            </div>
         </div>
         <div class="row">
-            <h2><?= date('l jS F Y \o\n H:i', strtotime($lesson['start_datetime'])) . ' - ' . date('H:i', strtotime($lesson['end_datetime'])); ?></h2>
-            <ul class="list-group">
-                <li class="list-group-item"><b>Datum en tijd:</b> <?= date('l jS F Y \o\n H:i', strtotime($lesson['start_datetime'])) . ' - ' . date('H:i', strtotime($lesson['end_datetime'])) ?></li>
-            </ul>
+            <div>
+                <h2><?= date('l d F | H:i', strtotime($lesson['start_datetime'])) . ' - ' . date('H:i', strtotime($lesson['end_datetime'])); ?></h2>
+                <p>Deze les wordt gehouden door <?= $lesson['id'] ?></p>
+                <form method="post" action="./signup.php">
+                    <input type="hidden" name="selected_id" value="<?= $lesson['id'] ?>">
+                    <input type="submit" name="selected_lesson" class="btn btn-link text-maroon p-0" value="Aanmelden">
+                </form>
+            </div>
         </div>
     </div>
 </body>

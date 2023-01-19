@@ -2,8 +2,14 @@
 // Require DB settings with connection variable
 require_once "./includes/database.php";
 
+// If user is logged in, redirect to index.php
+if(isset($_SESSION['user'])){
+    header('Location:' . $base_url . '/auth/user');
+    exit;
+}
+
 //Get lessons from the database with an SQL query
-$lessons = getLessons($db);
+$trialLessons = getTrialLessons($db);
 
 //Close connection
 mysqli_close($db);
@@ -26,13 +32,24 @@ mysqli_close($db);
             <?php require_once "./includes/navigation-bar.php"; ?>
         </div>
         <div class="row">
-            <ul>
-                <?php foreach ($lessons as $lesson) { ?>
-
-                    <li><?= $lesson['start_datetime'] ?> - <?= $lesson['end_datetime'] ?> <a href="./details.php?id=<?= $lesson['id'] ?>">details</a></li>
-
-                <?php } ?>
-            </ul>
+            <div class="col p-2">
+                <table class="table table-borderless">
+                    <tbody>
+                        <?php foreach ($trialLessons as $lesson) { ?>
+                            <tr>
+                                <td class="border"><p><?= formatToDate($lesson['start_datetime']) . " | " . formatToTime($lesson['start_datetime']) . " - " . formatToTime($lesson['end_datetime']); ?></p></td>
+                                <td><a class="text-maroon" href="./details.php?id=<?= $lesson['id'] ?>">Details</a></td>
+                                <td>
+                                    <form method="post" action="./signup.php">
+                                        <input type="hidden" name="selected_id" value="<?= $lesson['id'] ?>">
+                                        <input type="submit" name="selected_lesson" class="btn btn-link text-maroon p-0" value="Aanmelden">
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>

@@ -14,8 +14,17 @@ if ($uri_dir != "\\")
     $base_url .= $uri_dir;
 }
 
+// Functions that are used in other files
+function formatToDate($datetime) {
+    return date('d-m-Y', strtotime($datetime));
+}
+
+function formatToTime($datetime) {
+    return date("H:i", strtotime($datetime));
+}
+
 // Start session
-// session_start();
+session_start();
 
 // Create connection to the database
 $db = mysqli_connect($host, $user, $password, $database)
@@ -26,47 +35,90 @@ $db = mysqli_connect($host, $user, $password, $database)
      * Description: This function logs in the user by 
      * verifying the given password.
      */
-    // function login(mysqli $db, $email, $password) {
-    //     // Hash password
-    //     $hash = password_hash($password, PASSWORD_DEFAULT);
-        
-    //     // Prepare query and execute
-    //     $query = "SELECT * FROM users WHERE email='$email'";
-    //     $result = mysqli_query($db, $query) or die ('Error: ' . $query );
+    function login(mysqli $db, $email, $password) {
+        // Prepare query and execute
+        $query = "SELECT * FROM users WHERE email='$email'";
+        $result = mysqli_query($db, $query) or die ('Error: ' . $query );
 
-    //     $user = null;
-    //     $row = mysqli_fetch_assoc($result);
+        if (mysqli_num_rows($result) == 1) {
+            // Get user data from result
+            $user = mysqli_fetch_assoc($result);
 
-    //     if ($row == null) {
-    //         // Verify password
-    //         $checkPassword = $row['password'];
-    //         if (password_verify($password, $checkPassword)) {
-    //             $user = $row;
-    //         } else {
-    //             $user = 'Login failed';
-    //         }
-    //     } else {
-    //         $user = 'Login failed';
-    //     }
+            // Check if the provided password matches the stored password in the database
+            echo $password;
+            if (password_verify($password, $user['password'])) {
+                // Store the user in the session
+                $_SESSION['user'] = [
+                    'id'    => $user['id'],
+                    'name'  => $user['name'],
+                    'phone' => $user['phone'],
+                    'email' => $user['email'],
+                ];
+
+                // Redirect to secure page
+            } else {
+                //error incorrect log in
+                $user = 'Login failed';
+            }
+        } else {
+            //error incorrect log in
+            $user = 'Login failed';
+        }
         
-    //     return $user;
-    // }
+        return $user;
+    }
     
     /**
      * Function: register
      * Description: This function registers a new user.
      */
-    // function register(mysqli $db, $name, $registerPassword, $phone, $email) {
-    //     // Hash password
-    //     $hash = password_hash($registerPassword, PASSWORD_DEFAULT);
+    function register(mysqli $db, $name, $registerPassword, $phone, $email) {
+        // Hash password
+        $password = password_hash($registerPassword, PASSWORD_DEFAULT);
         
-    //     // Prepare query and execute
-    //     $query = "INSERT INTO users (name, password, phone, email)
-    //                   VALUES ('$name', '$hash', '$phone', '$email')";
-    //     $result = mysqli_query($db, $query) or die('Error: '.mysqli_error($db). ' with query ' . $query);
+        // Prepare query and execute
+        $query = "INSERT INTO users (name, password, phone, email)
+                      VALUES ('$name', '$password', '$phone', '$email')";
+        $result = mysqli_query($db, $query) or die('Error: '.mysqli_error($db). ' with query ' . $query);
 
-    //     return $result;
-    // }
+        return $result;
+    }
+
+    /**
+     * Function: getAllLessons
+     * Description: This function gets all the lessons
+     * from the database table starting from current date.
+     */
+    function getAllLessons(mysqli $db) {
+        // Prepare query and execute
+        $query = "SELECT * FROM `lessons` WHERE start_datetime >= CURDATE()";
+        $result = mysqli_query($db, $query) or die ('Error: ' . $query );
+        
+        $lessons = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $lessons[] = $row;
+        }
+
+        return $lessons;
+    }
+
+    /**
+     * Function: getTrialLessons
+     * Description: This function gets all the trial-lessons
+     * from the database table starting from current date.
+     */
+    function getTrialLessons(mysqli $db) {
+        // Prepare query and execute
+        $query = "SELECT * FROM `lessons` WHERE trial_lesson = 1 AND start_datetime >= CURDATE()";
+        $result = mysqli_query($db, $query) or die ('Error: ' . $query );
+        
+        $trialLessons = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $trialLessons[] = $row;
+        }
+
+        return $trialLessons;
+    }
 
     /**
      * Function: getLessons
@@ -75,7 +127,7 @@ $db = mysqli_connect($host, $user, $password, $database)
      */
     function getLessons(mysqli $db) {
         // Prepare query and execute
-        $query = "SELECT * FROM `lessons` WHERE start_datetime >= CURDATE()";
+        $query = "SELECT * FROM `lessons` WHERE trial_lesson = 0 AND start_datetime >= CURDATE()";
         $result = mysqli_query($db, $query) or die ('Error: ' . $query );
         
         $lessons = [];
