@@ -9,7 +9,7 @@ if(!isset($_SESSION['user'])){
 }
 
 //Get lessons from the database with an SQL query
-$essons = getLessons($db);
+$lessons = getLessons($db);
 
 //Get reservations from the database with an SQL query
 $reservations = getReservations($db);
@@ -24,8 +24,6 @@ for ($x=0; $x < count($reservations); $x++) {
         $reservations[$x]['lesson'] = '';
     }
 }
-
-require_once "../includes/calendar.php";
 
 //Close connection
 mysqli_close($db);
@@ -48,46 +46,24 @@ mysqli_close($db);
             <?php require_once "../includes/navigation-bar.php"; ?>
         </div>
         <div class="row d-flex justify-content-center">
-            <div class="col-md-9 d-flex justify-content-between">
-                <span class="btn text-maroon"><?= $titles['yearmonth']; ?></span>
-
-                <div class="btn-group border border-maroon rounded-pill" role="group">
-                    <a href="?year=<?=$prev['year'];?>&week=<?=$prev['week'];?>" class="btn btn-outline-maroon"><</a>
-                    <button type="button" class="btn btn-outline-maroon"><?= $titles['week']; ?></button>
-                    <a href="?year=<?=$next['year'];?>&week=<?=$next['week'];?>" class="btn btn-outline-maroon">></a>
-                </div>
-                
-                <a class="btn btn-maroon rounded-pill">Cursussen</a>
+            <div class="col-md-9 d-flex justify-content-center">
+                <a href="./" class="btn btn-maroon rounded-pill">Lessen</a>
             </div>
         </div>
         <div class="row d-flex justify-content-center">
             <div class="col-md-9">
                 <table class="table table-borderless">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <?php foreach ($week as $day) { ?>
-                                <th class="text-center"><?= $day['day']; ?><br><?= $day['date']; ?></th>
-                            <?php } ?>
-                        </tr>
-                    </thead>
                     <tbody>
-                        <?php for ($x=0; $x <= $hour_count; $x++) { ?>
+                        <?php foreach ($lessons as $lesson) { ?>
                             <tr>
-                                <td class="text-center">
-                                    <?= formatStrToTime($x); ?>
+                                <td class="border"><p><?= formatToDate($lesson['start_datetime']) . " | " . formatToTime($lesson['start_datetime']) . " - " . formatToTime($lesson['end_datetime']); ?></p></td>
+                                <td><a class="text-maroon" href="./details.php?id=<?= $lesson['id'] ?>">Details</a></td>
+                                <td>
+                                    <form method="post" action="./create.php">
+                                        <input type="hidden" name="selected_id" value="<?= $lesson['id'] ?>">
+                                        <input type="submit" name="selected_lesson" class="btn btn-link text-maroon p-0" value="Aanmelden">
+                                    </form>
                                 </td>
-                                <?php foreach ($week as $day) { ?>
-                                    <td>
-                                        <?php foreach ($day['hours'] as $hour) {
-                                            if (formatStrToTime($x) == $hour['time']) {
-                                                if (isset($hour['lessons'])) { ?>
-                                                    <a href="./details-lesson.php?id=<?= $lesson['id'] ?>" class="btn text-center border border-maroon rounded-pill"><?= $hour['time']; ?></a>
-                                                <? }
-                                            }
-                                        } ?>
-                                    </td>
-                                <?php } ?>
                             </tr>
                         <?php } ?>
                     </tbody>

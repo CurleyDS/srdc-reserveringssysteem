@@ -1,10 +1,10 @@
 <?php
 //Require DB settings with connection variable
-require_once "includes/database.php";
+require_once "../includes/database.php";
 
-// If user is logged in, redirect to index.php
+// If user is not logged in, redirect to index.php
 if(!isset($_SESSION['user'])){
-    header('Location:' . $base_url);
+    header('Location:' . $base_url . '/../');
     exit;
 }
 
@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
     $email = mysqli_escape_string($db, $_POST['email']);
     
     // Require form-validations
-    require_once "includes/form-validation.php";
+    require_once "../includes/form-validation.php";
 
     if (empty($errors)) {
         $result = register($db, $name, $registerPassword, $phone, $email);
@@ -42,14 +42,19 @@ mysqli_close($db);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <title>Login</title>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row bg-black">
             <!-- Require navigation-bar -->
-            <?php require_once "includes/navigation-bar.php"; ?>
+            <?php require_once "../includes/navigation-bar.php"; ?>
+        </div>
+        <div class="row">
+            <div class="col p-2">
+                <a class="btn btn-maroon" href="./">Terug</a>
+            </div>
         </div>
         <div class="row py-3 d-flex justify-content-center">
             <div class="col-md-10">
