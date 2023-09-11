@@ -1,9 +1,9 @@
 <?php
 // Require DB settings with connection variable
-$host       = "localhost";
+$host       = "";
 $database   = "srdc_database";
 $user       = "root";
-$password   = "mysql";
+$password   = "";
 
 // Get base_url
 $base_url = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
